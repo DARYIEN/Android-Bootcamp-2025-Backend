@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final CenterRepository centerRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
+
     @Override
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream().map(UserMapper::convertToDTO).collect(Collectors.toList());
@@ -41,7 +42,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> getFreeUsers() {
-        return userRepository.findByCenterId(null).stream().map(UserMapper::convertToDTO).collect(Collectors.toList());
+        Optional<Authority> userAuthority = authorityRepository.findById(1L);
+        if (userAuthority.isPresent()) {
+            return userRepository.findByCenterIdAndAuthorities(null,userAuthority.get()).stream().map(UserMapper::convertToDTO).collect(Collectors.toList());
+
+        } else {
+            throw new OtherException("Непредвиденная ошибка");
+        }
     }
 
     @Override
