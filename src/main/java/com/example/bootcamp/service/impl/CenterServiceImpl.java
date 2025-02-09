@@ -33,7 +33,7 @@ public class CenterServiceImpl implements CenterService {
 
     @Override
     public List<CenterDTO> getClosestCenters(double latitude, double longitude) {
-        List<Center> centers = centerRepository.findAll().stream().map(center -> CenterMapper.addDistance(center, latitude, longitude, center.getLat(), center.getLng())).collect(Collectors.toList());
+                List<Center> centers = centerRepository.findAll().stream().map(center -> CenterMapper.addDistance(center, latitude, longitude, center.getLat(), center.getLng())).collect(Collectors.toList());
         centers = centers.stream().sorted(Comparator.comparingDouble(Center::getDistance))
                 .limit(5)
                 .collect(Collectors.toList());
